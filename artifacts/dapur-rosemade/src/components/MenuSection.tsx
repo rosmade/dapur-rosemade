@@ -1,19 +1,8 @@
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/utils";
-import { type MenuItem } from "@/context/CartContext";
-
-const menuItems: MenuItem[] = [
-  { id: 1, emoji: "🍱", name: "Nasi Ayam Bumbu Kuning", desc: "Ayam kampung dengan bumbu kuning khas", price: 25000, badge: "Best Seller" },
-  { id: 2, emoji: "🥘", name: "Rendang Daging Sapi", desc: "Rendang empuk bumbu rempah pilihan", price: 35000, badge: "Best Seller" },
-  { id: 3, emoji: "🍜", name: "Mie Goreng Spesial", desc: "Mie goreng dengan topping komplit", price: 20000, badge: null },
-  { id: 4, emoji: "🥗", name: "Gado-Gado Segar", desc: "Sayuran segar dengan bumbu kacang spesial", price: 18000, badge: "Baru" },
-  { id: 5, emoji: "🍛", name: "Nasi Gudeg Komplit", desc: "Gudeg Jogja dengan krecek dan ayam", price: 28000, badge: null },
-  { id: 6, emoji: "🥩", name: "Semur Daging Kentang", desc: "Daging empuk dengan kuah semur kental", price: 30000, badge: "Baru" },
-  { id: 7, emoji: "🍲", name: "Soto Ayam Lamongan", desc: "Soto bening dengan ayam suwir dan lontong", price: 22000, badge: null },
-  { id: 8, emoji: "🥞", name: "Martabak Telur Mini", desc: "Martabak gurih isi daging dan telur", price: 15000, badge: null },
-  { id: 9, emoji: "🍮", name: "Klepon Ubi Ungu", desc: "Klepon lembut isi gula merah cair", price: 12000, badge: "Baru" },
-];
+import { type MenuItem } from "@/lib/menuStore";
+import { useMenuStore } from "@/lib/menuStore";
 
 function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const { addToCart } = useCart();
@@ -64,6 +53,8 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
 }
 
 export function MenuSection() {
+  const { menu } = useMenuStore();
+
   return (
     <section id="menu" className="py-20 bg-secondary/30" data-testid="menu-section">
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
@@ -85,11 +76,18 @@ export function MenuSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          {menuItems.map((item, i) => (
-            <MenuCard key={item.id} item={item} index={i} />
-          ))}
-        </div>
+        {menu.length === 0 ? (
+          <div className="text-center py-20 text-muted-foreground">
+            <span className="text-5xl block mb-4">🍽️</span>
+            <p>Menu sedang dipersiapkan. Pantau terus!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+            {menu.map((item, i) => (
+              <MenuCard key={item.id} item={item} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

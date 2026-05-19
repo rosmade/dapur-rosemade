@@ -1,13 +1,7 @@
-import React, { createContext, useContext, useState, useMemo, ReactNode } from "react";
+import { createContext, useContext, useState, useMemo, ReactNode } from "react";
+import { type MenuItem } from "@/lib/menuStore";
 
-export type MenuItem = {
-  id: number;
-  emoji: string;
-  name: string;
-  desc: string;
-  price: number;
-  badge: string | null;
-};
+export type { MenuItem };
 
 export type CartItem = MenuItem & {
   quantity: number;
