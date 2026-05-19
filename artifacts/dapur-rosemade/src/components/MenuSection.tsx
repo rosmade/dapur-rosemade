@@ -1,0 +1,96 @@
+import { motion } from "framer-motion";
+import { useCart } from "@/context/CartContext";
+import { formatRupiah } from "@/lib/utils";
+import { type MenuItem } from "@/context/CartContext";
+
+const menuItems: MenuItem[] = [
+  { id: 1, emoji: "🍱", name: "Nasi Ayam Bumbu Kuning", desc: "Ayam kampung dengan bumbu kuning khas", price: 25000, badge: "Best Seller" },
+  { id: 2, emoji: "🥘", name: "Rendang Daging Sapi", desc: "Rendang empuk bumbu rempah pilihan", price: 35000, badge: "Best Seller" },
+  { id: 3, emoji: "🍜", name: "Mie Goreng Spesial", desc: "Mie goreng dengan topping komplit", price: 20000, badge: null },
+  { id: 4, emoji: "🥗", name: "Gado-Gado Segar", desc: "Sayuran segar dengan bumbu kacang spesial", price: 18000, badge: "Baru" },
+  { id: 5, emoji: "🍛", name: "Nasi Gudeg Komplit", desc: "Gudeg Jogja dengan krecek dan ayam", price: 28000, badge: null },
+  { id: 6, emoji: "🥩", name: "Semur Daging Kentang", desc: "Daging empuk dengan kuah semur kental", price: 30000, badge: "Baru" },
+  { id: 7, emoji: "🍲", name: "Soto Ayam Lamongan", desc: "Soto bening dengan ayam suwir dan lontong", price: 22000, badge: null },
+  { id: 8, emoji: "🥞", name: "Martabak Telur Mini", desc: "Martabak gurih isi daging dan telur", price: 15000, badge: null },
+  { id: 9, emoji: "🍮", name: "Klepon Ubi Ungu", desc: "Klepon lembut isi gula merah cair", price: 12000, badge: "Baru" },
+];
+
+function MenuCard({ item, index }: { item: MenuItem; index: number }) {
+  const { addToCart } = useCart();
+
+  return (
+    <motion.div
+      className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-200"
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.45, delay: (index % 3) * 0.08 }}
+      data-testid={`menu-card-${item.id}`}
+    >
+      {/* Image area */}
+      <div className="bg-accent h-36 flex items-center justify-center relative">
+        <span className="text-6xl select-none">{item.emoji}</span>
+        {item.badge && (
+          <span
+            className={`absolute top-3 left-3 text-xs font-bold text-primary-foreground px-2.5 py-1 rounded-full ${
+              item.badge === "Best Seller" ? "bg-primary" : "bg-[#8B4560]"
+            }`}
+            data-testid={`badge-${item.id}`}
+          >
+            {item.badge}
+          </span>
+        )}
+      </div>
+
+      {/* Info area */}
+      <div className="p-4 flex flex-col flex-1">
+        <h3 className="font-semibold text-foreground mb-1 text-base leading-snug">{item.name}</h3>
+        <p className="text-muted-foreground text-xs mb-3 flex-1 line-clamp-1">{item.desc}</p>
+        <div className="flex items-center justify-between mt-auto gap-3">
+          <span className="font-serif font-bold text-foreground text-base" data-testid={`price-${item.id}`}>
+            {formatRupiah(item.price)}
+          </span>
+          <button
+            className="bg-primary hover:bg-[#8B4560] text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors duration-200 whitespace-nowrap"
+            onClick={() => addToCart(item)}
+            data-testid={`add-to-cart-${item.id}`}
+          >
+            + Tambah
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+export function MenuSection() {
+  return (
+    <section id="menu" className="py-20 bg-secondary/30" data-testid="menu-section">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <motion.div
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <p className="text-primary font-medium uppercase tracking-wide text-sm mb-2">
+            Pilihan Terbaik
+          </p>
+          <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">
+            Menu Hari Ini
+          </h2>
+          <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
+            Semua menu dimasak segar setiap hari — tanpa bahan pengawet, penuh cita rasa.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          {menuItems.map((item, i) => (
+            <MenuCard key={item.id} item={item} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

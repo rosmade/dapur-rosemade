@@ -1,0 +1,104 @@
+Build a complete homemade food selling website using HTML, CSS, and vanilla JavaScript (single file: index.html). The website must be fully functional, visually attractive, mobile-responsive, and ready to deploy on Replit.
+
+===========================
+🏠 BRAND & IDENTITY
+===========================
+- Shop name: "Dapur Rosemade"
+- Tagline: "Masakan rumahan buatan tangan, penuh kasih sayang"
+- Font: Google Fonts — "Playfair Display" for the shop name/headings, "Lato" for body text
+- Color palette (apply throughout the entire site):
+    --color-primary:    #C96A8A   (dusty rose — buttons, highlights, CTA)
+    --color-primary-dk: #8B4560   (deep mauve — hover states, active)
+    --color-bg:         #FFF0F5   (blush cream — page background)
+    --color-surface:    #FFFFFF   (white — cards, navbar, modal)
+    --color-accent:     #F2C4D0   (soft rose — badges, borders, decorative accents)
+    --color-text-dark:  #3D1525   (wine dark — headings, strong text)
+    --color-text-muted: #7D5060   (muted mauve — secondary text, labels)
+    --color-btn-text:   #FFFFFF   (white — text on primary buttons)
+- Use soft rose (#F2C4D0) for borders, dividers, and card outlines
+- All buttons: background #C96A8A, text white, border-radius 30px (pill shape), hover → #8B4560
+- Decorative touch: add a small rose emoji 🌹 or floral SVG accent near the shop name in the header
+
+===========================
+🗂️ WEBSITE SECTIONS
+===========================
+1. NAVBAR (sticky top)
+   - Logo area: rose emoji + "Dapur Rosemade" in Playfair Display, color #3D1525
+   - Links: Beranda | Menu | Tentang Kami
+   - Cart icon (ti-shopping-bag or basket) with item count badge in #C96A8A
+   - Hamburger menu on mobile (≤768px), smooth open/close
+
+2. HERO SECTION
+   - Full-width section, background color: #FFF0F5
+   - Large heading: "Masakan Rumahan, Rasa Penuh Cinta 🍱" in Playfair Display, color #3D1525
+   - Subheading: "Setiap masakan dibuat dengan bahan pilihan segar, tanpa pengawet, langsung dari dapur kami untuk meja makanmu."
+   - CTA button: "Lihat Menu" → scrolls to menu section (pill button, #C96A8A)
+   - Decorative: a soft rose-colored illustrated pot or bowl (use a styled div or simple SVG) on the right side
+
+3. ABOUT / KEUNGGULAN SECTION
+   - 3-column icon highlight grid:
+     * 🥬 "Bahan Segar" — Dipilih langsung setiap hari
+     * 🍳 "Dimasak Sendiri" — Bukan pabrik, murni tangan
+     * 💝 "Penuh Kasih" — Seperti masakan ibu
+   - Each item: icon (large emoji or SVG), title in #3D1525, desc in #7D5060
+   - Background: white card with soft rose border #F2C4D0
+
+4. MENU / CATALOG SECTION
+   - Section heading: "Menu Hari Ini" in Playfair Display
+   - Responsive card grid: 2 cols mobile → 3 cols desktop
+   - Each menu card:
+     * Rounded top image area (use a colored div #F2C4D0 with emoji centered, font-size 48px)
+     * Food name (font-weight 600, #3D1525)
+     * Short description (1 line, #7D5060, font-size 13px)
+     * Price formatted as "Rp 25.000"
+     * Optional badge: "Best Seller" (bg: #C96A8A, text: white) or "Baru" (bg: #8B4560, text: white)
+     * Button: "+ Tambah" — pill button, bg #C96A8A, text white
+   - Card style: white bg, border 1px solid #F2C4D0, border-radius 16px, soft hover lift (transform translateY -3px, transition 0.2s)
+
+5. CART PANEL
+   - On desktop: fixed right sidebar (width 320px), slides in when cart has items
+   - On mobile: bottom drawer (full-width, height auto, slide up from bottom)
+   - Header: "🛒 Pesananmu" in Playfair Display
+   - Each cart item row:
+     * Item name (#3D1525)
+     * Qty control: [−] [qty] [+] buttons (small pill, border #C96A8A, text #C96A8A)
+     * Subtotal right-aligned (#3D1525, bold)
+     * Trash icon (🗑 or ti-trash, #C96A8A)
+   - Divider in #F2C4D0
+   - Total: "Total: Rp XX.XXX" bold, #3D1525, font-size 18px
+   - CTA: "Pesan via WhatsApp 💬" — full-width pill button, bg #C96A8A, text white
+   - Empty state: large emoji 🛒, text "Keranjangmu masih kosong~" in #7D5060
+
+6. ORDER FORM MODAL
+   - Triggered by "Pesan via WhatsApp" button
+   - Full-screen overlay: rgba(61, 21, 37, 0.5) backdrop
+   - Modal card: white bg, border-radius 20px, padding 2rem, max-width 480px, centered
+   - Header: "Detail Pemesanan 📋" in Playfair Display, #3D1525
+   - Fields (styled with border #F2C4D0, focus border #C96A8A, border-radius 10px):
+       * Nama Lengkap* (text input)
+       * Nomor WhatsApp* (tel input, placeholder: "08xx-xxxx-xxxx")
+       * Alamat Pengiriman* (textarea, 3 rows)
+       * Catatan Tambahan (textarea optional, placeholder: "Misal: tidak pedas, tanpa kecap...")
+       * Metode Pembayaran (radio buttons, styled with rose accent):
+           ○ Transfer Bank BCA
+           ○ Transfer Bank BRI  
+           ○ GoPay / OVO
+           ○ COD (Bayar di Tempat)
+   - Submit button: "Kirim ke WhatsApp 🚀" — pill, full-width, bg #C96A8A
+   - Close button: top-right ×, color #7D5060
+   - Inline validation: red border + small error text below on empty required fields
+
+7. FOOTER
+   - Background: #3D1525 (wine dark)
+   - Text color: #F2C4D0
+   - Shop name: "Dapur Rosemade 🌹" in Playfair Display
+   - Tagline below name
+   - Jam Operasional: "Senin – Sabtu, 08.00 – 20.00 WIB"
+   - WhatsApp link (open wa.me link in new tab)
+   - Social: Instagram & TikTok placeholder icons
+   - Copyright: "© 2025 Dapur Rosemade. Dibuat dengan 💝"
+
+===========================
+📦 MENU DATA (edit di sini)
+===========================
+Define at top of 

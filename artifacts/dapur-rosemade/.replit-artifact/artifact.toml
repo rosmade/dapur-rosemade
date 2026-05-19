@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Dapur Rosemade"
+version = "1.0.0"
+id = "artifacts/dapur-rosemade"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 21007
+
+[services.development]
+run = "pnpm --filter @workspace/dapur-rosemade run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/dapur-rosemade", "run", "build" ]
+publicDir = "artifacts/dapur-rosemade/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "21007"
+BASE_PATH = "/"
