@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMenuStore, type MenuItem } from "@/lib/menuStore";
 import { formatRupiah } from "@/lib/utils";
-import { Pencil, Trash2, Plus, LogOut, ChefHat, Check, X, ToggleLeft, ToggleRight } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, ChefHat, Check, X, ToggleLeft, ToggleRight, MessageCircle, Send } from "lucide-react";
 
 const ADMIN_PASSWORD = "dapurmamaros123";
 
@@ -187,6 +187,130 @@ function MenuForm({
   );
 }
 
+const WA_NUMBER = "6285230593093";
+
+const broadcastTemplates = [
+  {
+    label: "Menu Baru Tersedia",
+    icon: "🍽️",
+    text: "Halo kak! 🌹 Ada menu baru di Dapur Rosemade hari ini! Yuk langsung order sebelum kehabisan. Cek lengkapnya di sini ya~",
+  },
+  {
+    label: "Restock Stok Habis",
+    icon: "✅",
+    text: "Kabar gembira! 🎉 Menu yang kemarin habis sudah tersedia lagi di Dapur Rosemade. Buruan order sekarang sebelum habis lagi ya kak! 🌹",
+  },
+  {
+    label: "Promo Hari Ini",
+    icon: "🎁",
+    text: "Halo kak! Ada promo spesial hari ini dari Dapur Rosemade 🌹 Order sekarang dan nikmati masakan rumahan penuh kasih sayang. Hubungi kami untuk info lebih lanjut!",
+  },
+  {
+    label: "Pengumuman Libur",
+    icon: "📅",
+    text: "Halo kak! Kami ingin menginformasikan bahwa Dapur Rosemade akan libur sejenak. Kami akan segera kembali melayani pesananmu. Terima kasih atas pengertiannya 🌹",
+  },
+];
+
+function BroadcastPanel({ menu }: { menu: ReturnType<typeof useMenuStore>["menu"] }) {
+  const [message, setMessage] = useState("");
+  const [selectedTemplate, setSelectedTemplate] = useState<number | null>(null);
+
+  const availableMenu = menu.filter((m) => !m.soldOut);
+
+  const buildMenuList = () => {
+    if (availableMenu.length === 0) return "Belum ada menu tersedia.";
+    return availableMenu
+      .map((m) => `${m.emoji} ${m.name} — ${formatRupiah(m.price)}${m.badge ? ` (${m.badge})` : ""}`)
+      .join("\n");
+  };
+
+  const applyTemplate = (idx: number) => {
+    setSelectedTemplate(idx);
+    setMessage(broadcastTemplates[idx].text);
+  };
+
+  const sendBroadcast = () => {
+    if (!message.trim()) return;
+    const fullMsg = `${message.trim()}\n\n📋 *Menu Tersedia Hari Ini:*\n${buildMenuList()}`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(fullMsg)}`, "_blank");
+  };
+
+  return (
+    <div className="bg-white border border-[#F2C4D0] rounded-2xl overflow-hidden shadow-sm mb-6">
+      <div className="flex items-center gap-2 px-5 py-4 border-b border-[#F2C4D0]">
+        <MessageCircle className="h-5 w-5 text-[#C96A8A]" />
+        <h2 className="font-serif font-bold text-[#3D1525] text-lg">Broadcast WhatsApp</h2>
+      </div>
+
+      <div className="px-5 py-5 space-y-4">
+        {/* Template shortcuts */}
+        <div>
+          <p className="text-xs font-medium text-[#7D5060] mb-2">Template Cepat</p>
+          <div className="grid grid-cols-2 gap-2">
+            {broadcastTemplates.map((t, i) => (
+              <button
+                key={i}
+                onClick={() => applyTemplate(i)}
+                className={`flex items-center gap-2 text-left text-xs font-medium px-3 py-2 rounded-xl border transition-colors ${
+                  selectedTemplate === i
+                    ? "border-[#C96A8A] bg-[#FFF0F5] text-[#C96A8A]"
+                    : "border-[#F2C4D0] text-[#7D5060] hover:bg-[#FFF0F5]"
+                }`}
+                data-testid={`broadcast-template-${i}`}
+              >
+                <span>{t.icon}</span>
+                {t.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Message editor */}
+        <div>
+          <p className="text-xs font-medium text-[#7D5060] mb-1.5">Pesan Broadcast</p>
+          <textarea
+            value={message}
+            onChange={(e) => { setMessage(e.target.value); setSelectedTemplate(null); }}
+            rows={4}
+            placeholder="Tulis pesan broadcast ke pelanggan..."
+            className="w-full border border-[#F2C4D0] focus:border-[#C96A8A] focus:outline-none rounded-xl px-4 py-3 text-[#3D1525] text-sm resize-none placeholder:text-[#7D5060]/40"
+            data-testid="broadcast-message-input"
+          />
+          <p className="text-[#7D5060]/50 text-xs mt-1">
+            Daftar menu yang tersedia hari ini akan otomatis ditambahkan di bawah pesan.
+          </p>
+        </div>
+
+        {/* Preview of menu list */}
+        {availableMenu.length > 0 && (
+          <div className="bg-[#FFF0F5] rounded-xl px-4 py-3 border border-[#F2C4D0]">
+            <p className="text-xs font-medium text-[#7D5060] mb-2">Preview daftar menu yang akan dikirim:</p>
+            <div className="space-y-0.5">
+              {availableMenu.map((m) => (
+                <p key={m.id} className="text-xs text-[#3D1525]">
+                  {m.emoji} {m.name} — {formatRupiah(m.price)}{m.badge ? ` (${m.badge})` : ""}
+                </p>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Send button */}
+        <button
+          onClick={sendBroadcast}
+          disabled={!message.trim()}
+          className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#1ebe5d] disabled:opacity-40 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-full transition-colors"
+          data-testid="broadcast-send-button"
+        >
+          <Send className="h-4 w-4" />
+          Kirim via WhatsApp
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
   const { menu, addItem, updateItem, deleteItem, toggleSoldOut } = useMenuStore();
   const [showAddForm, setShowAddForm] = useState(false);
@@ -271,6 +395,9 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <div className="text-[#7D5060] text-xs mt-0.5">Habis</div>
           </div>
         </div>
+
+        {/* WhatsApp Broadcast */}
+        <BroadcastPanel menu={menu} />
 
         {/* Menu list */}
         <div className="bg-white border border-[#F2C4D0] rounded-2xl overflow-hidden shadow-sm">
