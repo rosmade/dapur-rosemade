@@ -1,15 +1,18 @@
 import { motion } from "framer-motion";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/utils";
-import { type MenuItem } from "@/lib/menuStore";
-import { useMenuStore } from "@/lib/menuStore";
+import { type MenuItem, useMenuStore } from "@/lib/menuStore";
 
 function MenuCard({ item, index }: { item: MenuItem; index: number }) {
   const { addToCart } = useCart();
 
   return (
     <motion.div
-      className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col shadow-sm hover:-translate-y-1 hover:shadow-md transition-all duration-200"
+      className={`bg-card border border-border rounded-2xl overflow-hidden flex flex-col shadow-sm transition-all duration-200 ${
+        item.soldOut
+          ? "opacity-60 grayscale"
+          : "hover:-translate-y-1 hover:shadow-md"
+      }`}
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
@@ -19,7 +22,18 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
       {/* Image area */}
       <div className="bg-accent h-36 flex items-center justify-center relative">
         <span className="text-6xl select-none">{item.emoji}</span>
-        {item.badge && (
+
+        {/* Sold out overlay */}
+        {item.soldOut && (
+          <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <span className="bg-gray-700 text-white text-xs font-bold px-3 py-1 rounded-full">
+              Habis
+            </span>
+          </div>
+        )}
+
+        {/* Badge (only show if not sold out) */}
+        {item.badge && !item.soldOut && (
           <span
             className={`absolute top-3 left-3 text-xs font-bold text-primary-foreground px-2.5 py-1 rounded-full ${
               item.badge === "Best Seller" ? "bg-primary" : "bg-[#8B4560]"
@@ -39,13 +53,19 @@ function MenuCard({ item, index }: { item: MenuItem; index: number }) {
           <span className="font-serif font-bold text-foreground text-base" data-testid={`price-${item.id}`}>
             {formatRupiah(item.price)}
           </span>
-          <button
-            className="bg-primary hover:bg-[#8B4560] text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors duration-200 whitespace-nowrap"
-            onClick={() => addToCart(item)}
-            data-testid={`add-to-cart-${item.id}`}
-          >
-            + Tambah
-          </button>
+          {item.soldOut ? (
+            <span className="text-sm text-muted-foreground font-medium px-4 py-2 border border-border rounded-full">
+              Habis
+            </span>
+          ) : (
+            <button
+              className="bg-primary hover:bg-[#8B4560] text-primary-foreground text-sm font-semibold px-4 py-2 rounded-full transition-colors duration-200 whitespace-nowrap"
+              onClick={() => addToCart(item)}
+              data-testid={`add-to-cart-${item.id}`}
+            >
+              + Tambah
+            </button>
+          )}
         </div>
       </div>
     </motion.div>

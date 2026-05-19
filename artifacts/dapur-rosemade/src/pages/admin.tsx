@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMenuStore, type MenuItem } from "@/lib/menuStore";
 import { formatRupiah } from "@/lib/utils";
-import { Pencil, Trash2, Plus, LogOut, ChefHat, Check, X } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, ChefHat, Check, X, ToggleLeft, ToggleRight } from "lucide-react";
 
 const ADMIN_PASSWORD = "dapurmamaros123";
 
@@ -188,7 +188,7 @@ function MenuForm({
 }
 
 function AdminDashboard({ onLogout }: { onLogout: () => void }) {
-  const { menu, addItem, updateItem, deleteItem } = useMenuStore();
+  const { menu, addItem, updateItem, deleteItem, toggleSoldOut } = useMenuStore();
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState<number | null>(null);
@@ -265,10 +265,10 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <div className="text-[#7D5060] text-xs mt-0.5">Best Seller</div>
           </div>
           <div className="bg-white border border-[#F2C4D0] rounded-xl p-4 text-center">
-            <div className="font-serif font-bold text-2xl text-[#C96A8A]">
-              {menu.filter((m) => m.badge === "Baru").length}
+            <div className="font-serif font-bold text-2xl text-gray-500">
+              {menu.filter((m) => m.soldOut).length}
             </div>
-            <div className="text-[#7D5060] text-xs mt-0.5">Menu Baru</div>
+            <div className="text-[#7D5060] text-xs mt-0.5">Habis</div>
           </div>
         </div>
 
@@ -321,14 +321,19 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                     />
                   </div>
                 ) : (
-                  <div className="flex items-center gap-3 px-5 py-4">
-                    <div className="w-11 h-11 bg-[#F2C4D0] rounded-xl flex items-center justify-center text-2xl shrink-0">
+                  <div className={`flex items-center gap-3 px-5 py-4 ${item.soldOut ? "opacity-60" : ""}`}>
+                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0 ${item.soldOut ? "bg-gray-200" : "bg-[#F2C4D0]"}`}>
                       {item.emoji}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="font-semibold text-[#3D1525] text-sm truncate">{item.name}</span>
-                        {item.badge && (
+                        {item.soldOut && (
+                          <span className="text-xs font-bold text-white bg-gray-500 px-2 py-0.5 rounded-full shrink-0">
+                            Habis
+                          </span>
+                        )}
+                        {item.badge && !item.soldOut && (
                           <span
                             className={`text-xs font-bold text-white px-2 py-0.5 rounded-full shrink-0 ${
                               item.badge === "Best Seller" ? "bg-[#C96A8A]" : "bg-[#8B4560]"
@@ -342,6 +347,25 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
                       <div className="font-semibold text-[#C96A8A] text-sm mt-0.5">{formatRupiah(item.price)}</div>
                     </div>
                     <div className="flex items-center gap-1 shrink-0">
+                      {/* Sold out toggle */}
+                      <button
+                        onClick={() => toggleSoldOut(item.id)}
+                        className={`flex items-center gap-1 text-xs font-medium px-2.5 py-1.5 rounded-full border transition-colors ${
+                          item.soldOut
+                            ? "border-gray-300 text-gray-500 hover:bg-gray-100"
+                            : "border-[#F2C4D0] text-[#7D5060] hover:bg-[#FFF0F5]"
+                        }`}
+                        title={item.soldOut ? "Tandai Tersedia" : "Tandai Habis"}
+                        data-testid={`toggle-soldout-${item.id}`}
+                      >
+                        {item.soldOut ? (
+                          <ToggleRight className="h-3.5 w-3.5" />
+                        ) : (
+                          <ToggleLeft className="h-3.5 w-3.5" />
+                        )}
+                        {item.soldOut ? "Tersedia" : "Habis"}
+                      </button>
+
                       <button
                         onClick={() => { setEditingId(item.id); setShowAddForm(false); }}
                         className="p-2 text-[#7D5060] hover:text-[#C96A8A] hover:bg-[#FFF0F5] rounded-lg transition-colors"
