@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd artifacts/dapur-rosemade && npx vite build --config vite.config.ts",
+  "outputDirectory": "artifacts/dapur-rosemade/dist/public",
+  "installCommand": "npm install -g pnpm && pnpm install"
+}
