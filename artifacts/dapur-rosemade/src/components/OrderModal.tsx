@@ -56,7 +56,7 @@ export function OrderModal() {
     const text = `*Pesanan Baru Dapur Rosemade* 🌹\n\n*Nama:* ${data.name}\n*No. WA:* ${data.whatsapp}\n*Alamat:* ${data.address}\n*Catatan:* ${data.notes || "-"}\n*Pembayaran:* ${data.payment}\n\n*Detail Pesanan:*\n${orderList}\n\n*Total: ${formatRupiah(totalPrice)}*\n\nMohon segera diproses, terima kasih! 💝`;
     
     const encodedText = encodeURIComponent(text);
-    window.open(`https://wa.me/6281234567890?text=${encodedText}`, "_blank");
+    window.open(`https://wa.me/6285230593093?text=${encodedText}`, "_blank");
     
     clearCart();
     setIsOrderModalOpen(false);

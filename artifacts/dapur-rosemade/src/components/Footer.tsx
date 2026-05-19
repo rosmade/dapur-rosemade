@@ -11,7 +11,7 @@ export function Footer() {
               Dapur Rosemade 🌹
             </h3>
             <p className="text-[#F2C4D0]/70 text-sm leading-relaxed mb-4">
-              Masakan rumahan buatan tangan, penuh kasih sayang.
+              Masakan/cemilan buatan tangan yang penuh kasih sayang.
             </p>
             <div className="flex gap-3">
               <a
@@ -33,7 +33,7 @@ export function Footer() {
                 <FaTiktok className="h-4 w-4 text-[#F2C4D0]" />
               </a>
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/6285230593093"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-9 h-9 bg-[#F2C4D0]/10 hover:bg-[#C96A8A] rounded-full flex items-center justify-center transition-colors"
@@ -47,16 +47,15 @@ export function Footer() {
           {/* Jam Operasional */}
           <div>
             <h4 className="font-serif text-lg font-semibold text-[#F2C4D0] mb-4">Jam Operasional</h4>
-            <p className="text-[#F2C4D0]/70 text-sm">Senin – Sabtu</p>
-            <p className="text-[#F2C4D0] font-semibold">08.00 – 20.00 WIB</p>
-            <p className="text-[#F2C4D0]/50 text-sm mt-2">Minggu & Hari Libur: Tutup</p>
+            <p className="text-[#F2C4D0] font-semibold">Hubungi kami untuk info jadwal</p>
+            <p className="text-[#F2C4D0]/50 text-sm mt-2">Minggu & Hari Libur: Fleksibel</p>
           </div>
 
           {/* Hubungi Kami */}
           <div>
             <h4 className="font-serif text-lg font-semibold text-[#F2C4D0] mb-4">Hubungi Kami</h4>
             <a
-              href="https://wa.me/6281234567890"
+              href="https://wa.me/6285230593093"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-[#C96A8A] hover:bg-[#8B4560] text-white font-semibold px-5 py-2.5 rounded-full transition-colors text-sm"
@@ -66,7 +65,7 @@ export function Footer() {
               Chat WhatsApp
             </a>
             <p className="text-[#F2C4D0]/50 text-xs mt-4">
-              Pesan sebelum jam 17.00 untuk pengiriman hari yang sama.
+              Terima kasih sudah order makanan/cemilan di Dapur Rosmade.
             </p>
           </div>
         </div>
