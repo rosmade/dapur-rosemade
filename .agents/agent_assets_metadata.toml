@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "nUweEBBwW8w3zAaWjQtAY"
+uri = "file://dapur-rosemade-source.tar.gz"
+type = "unspecified"
+title = "Dapur Rosemade — Source Code"
