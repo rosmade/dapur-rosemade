@@ -1,9 +1,9 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCart } from "@/context/CartContext";
 import { formatRupiah } from "@/lib/utils";
+import { saveOrder } from "@/lib/orderStore";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,7 +57,22 @@ export function OrderModal() {
     
     const encodedText = encodeURIComponent(text);
     window.open(`https://wa.me/6285230593093?text=${encodedText}`, "_blank");
-    
+
+    saveOrder({
+      name: data.name,
+      whatsapp: data.whatsapp,
+      address: data.address,
+      payment: data.payment,
+      notes: data.notes || "",
+      items: cart.map((item) => ({
+        name: item.name,
+        emoji: item.emoji,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+      total: totalPrice,
+    });
+
     clearCart();
     setIsOrderModalOpen(false);
     form.reset();

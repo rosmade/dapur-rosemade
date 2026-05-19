@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useMenuStore, type MenuItem } from "@/lib/menuStore";
+import { loadOrders, clearOrders, formatOrderDate, type Order } from "@/lib/orderStore";
 import { formatRupiah } from "@/lib/utils";
-import { Pencil, Trash2, Plus, LogOut, ChefHat, Check, X, ToggleLeft, ToggleRight, MessageCircle, Send } from "lucide-react";
+import { Pencil, Trash2, Plus, LogOut, ChefHat, Check, X, ToggleLeft, ToggleRight, MessageCircle, Send, ClipboardList, ChevronDown, ChevronUp, Trash } from "lucide-react";
 
 const ADMIN_PASSWORD = "dapurmamaros123";
 
@@ -184,6 +185,146 @@ function MenuForm({
         </button>
       </div>
     </form>
+  );
+}
+
+function OrderHistoryPanel() {
+  const [orders, setOrders] = useState<Order[]>(() => loadOrders());
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
+
+  const refresh = () => setOrders(loadOrders());
+
+  const handleClear = () => {
+    if (confirmClear) {
+      clearOrders();
+      setOrders([]);
+      setConfirmClear(false);
+    } else {
+      setConfirmClear(true);
+      setTimeout(() => setConfirmClear(false), 3000);
+    }
+  };
+
+  const paymentColor: Record<string, string> = {
+    BCA: "bg-blue-100 text-blue-700",
+    BRI: "bg-green-100 text-green-700",
+    "GoPay/OVO": "bg-purple-100 text-purple-700",
+    COD: "bg-orange-100 text-orange-700",
+  };
+
+  return (
+    <div className="bg-white border border-[#F2C4D0] rounded-2xl overflow-hidden shadow-sm mb-6">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[#F2C4D0]">
+        <div className="flex items-center gap-2">
+          <ClipboardList className="h-5 w-5 text-[#C96A8A]" />
+          <h2 className="font-serif font-bold text-[#3D1525] text-lg">Riwayat Pesanan</h2>
+          {orders.length > 0 && (
+            <span className="bg-[#C96A8A] text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              {orders.length}
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={refresh}
+            className="text-xs text-[#7D5060] hover:text-[#C96A8A] underline transition-colors"
+          >
+            Refresh
+          </button>
+          {orders.length > 0 && (
+            <button
+              onClick={handleClear}
+              className={`flex items-center gap-1 text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
+                confirmClear
+                  ? "bg-red-500 text-white border-red-500"
+                  : "border-[#F2C4D0] text-[#7D5060] hover:border-red-300 hover:text-red-500"
+              }`}
+            >
+              <Trash className="h-3 w-3" />
+              {confirmClear ? "Yakin hapus semua?" : "Hapus Semua"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {orders.length === 0 ? (
+        <div className="px-5 py-10 text-center text-[#7D5060]/50 text-sm">
+          Belum ada pesanan masuk. Pesanan akan muncul di sini setelah pelanggan klik "Kirim via WhatsApp".
+        </div>
+      ) : (
+        <div className="divide-y divide-[#F2C4D0]">
+          {orders.map((order) => (
+            <div key={order.id} className="px-5 py-4">
+              <button
+                className="w-full flex items-start justify-between gap-3 text-left"
+                onClick={() => setExpandedId(expandedId === order.id ? null : order.id)}
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-semibold text-[#3D1525] text-sm">{order.name}</span>
+                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${paymentColor[order.payment] ?? "bg-gray-100 text-gray-600"}`}>
+                      {order.payment}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3 mt-0.5 text-xs text-[#7D5060]">
+                    <span>{formatOrderDate(order.createdAt)}</span>
+                    <span>·</span>
+                    <span>{order.items.length} item</span>
+                    <span>·</span>
+                    <span className="font-semibold text-[#C96A8A]">{formatRupiah(order.total)}</span>
+                  </div>
+                </div>
+                {expandedId === order.id
+                  ? <ChevronUp className="h-4 w-4 text-[#7D5060] shrink-0 mt-0.5" />
+                  : <ChevronDown className="h-4 w-4 text-[#7D5060] shrink-0 mt-0.5" />
+                }
+              </button>
+
+              {expandedId === order.id && (
+                <div className="mt-3 space-y-2 pl-0">
+                  <div className="bg-[#FFF0F5] rounded-xl p-3 space-y-2 text-sm">
+                    <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-xs">
+                      <span className="text-[#7D5060] font-medium">WhatsApp</span>
+                      <span className="text-[#3D1525]">{order.whatsapp}</span>
+                      <span className="text-[#7D5060] font-medium">Alamat</span>
+                      <span className="text-[#3D1525]">{order.address}</span>
+                      {order.notes && (
+                        <>
+                          <span className="text-[#7D5060] font-medium">Catatan</span>
+                          <span className="text-[#3D1525]">{order.notes}</span>
+                        </>
+                      )}
+                    </div>
+                    <div className="border-t border-[#F2C4D0] pt-2 space-y-1">
+                      {order.items.map((item, i) => (
+                        <div key={i} className="flex justify-between text-xs">
+                          <span className="text-[#3D1525]">{item.emoji} {item.name} ×{item.quantity}</span>
+                          <span className="text-[#7D5060]">{formatRupiah(item.price * item.quantity)}</span>
+                        </div>
+                      ))}
+                      <div className="flex justify-between text-xs font-bold border-t border-[#F2C4D0] pt-1 mt-1">
+                        <span className="text-[#3D1525]">Total</span>
+                        <span className="text-[#C96A8A]">{formatRupiah(order.total)}</span>
+                      </div>
+                    </div>
+                  </div>
+                  <a
+                    href={`https://wa.me/${order.whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Halo ${order.name}! Terima kasih sudah order di Dapur Rosemade 🌹 Pesananmu sedang kami proses ya!`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1.5 text-xs font-medium text-[#25D366] hover:underline"
+                  >
+                    <MessageCircle className="h-3.5 w-3.5" />
+                    Balas pelanggan via WhatsApp
+                  </a>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -395,6 +536,9 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
             <div className="text-[#7D5060] text-xs mt-0.5">Habis</div>
           </div>
         </div>
+
+        {/* Order History */}
+        <OrderHistoryPanel />
 
         {/* WhatsApp Broadcast */}
         <BroadcastPanel menu={menu} />
