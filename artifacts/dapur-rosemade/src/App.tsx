@@ -36,8 +36,8 @@ function StoreFront() {
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={StoreFront} />
       <Route path="/admin" component={AdminPage} />
+      <Route path="/" component={StoreFront} />
       <Route component={NotFound} />
     </Switch>
   );
