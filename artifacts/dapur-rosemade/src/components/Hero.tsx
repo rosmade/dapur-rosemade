@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import heroImage from "@assets/Gemini_Generated_Image_9kx3gt9kx3gt9kx3_1779205214874.png";
 
 export function Hero() {
   const handleScrollToMenu = () => {
@@ -64,9 +65,13 @@ export function Hero() {
           transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
         >
           <div className="relative">
-            {/* Main pot illustration */}
-            <div className="w-56 h-56 sm:w-72 sm:h-72 bg-accent rounded-full flex items-center justify-center shadow-xl">
-              <span className="text-8xl sm:text-9xl select-none">🍲</span>
+            {/* Hero image */}
+            <div className="w-64 h-64 sm:w-80 sm:h-80 rounded-full overflow-hidden shadow-xl border-4 border-accent">
+              <img
+                src={heroImage}
+                alt="Dapur Rosemade Chef"
+                className="w-full h-full object-cover object-top"
+              />
             </div>
             {/* Floating badges */}
             <div className="absolute -top-4 -right-4 bg-card rounded-2xl shadow-lg px-4 py-2 border border-border">
@@ -75,7 +80,7 @@ export function Hero() {
             <div className="absolute -bottom-4 -left-4 bg-primary rounded-2xl shadow-lg px-4 py-2">
               <p className="text-sm font-semibold text-primary-foreground">100% Homemade</p>
             </div>
-            {/* Decorative rose dots */}
+            {/* Decorative accents */}
             <div className="absolute top-4 -left-8 text-2xl">🌹</div>
             <div className="absolute bottom-12 -right-6 text-xl">✨</div>
           </div>
