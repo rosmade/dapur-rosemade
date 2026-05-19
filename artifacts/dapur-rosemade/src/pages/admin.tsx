@@ -465,6 +465,7 @@ function AdminDashboard({ onLogout }: { onLogout: () => void }) {
       desc: form.desc.trim(),
       price: Number(form.price),
       badge: form.badge || null,
+      soldOut: false,
     });
     setShowAddForm(false);
   };

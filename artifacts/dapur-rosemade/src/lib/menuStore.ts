@@ -31,7 +31,7 @@ export function loadMenu(): MenuItem[] {
     const parsed = JSON.parse(raw) as MenuItem[];
     if (!Array.isArray(parsed) || parsed.length === 0) return defaultMenu;
     // Migrate old items that don't have soldOut field
-    return parsed.map((m) => ({ soldOut: false, ...m }));
+    return parsed.map((m) => ({ ...m, soldOut: m.soldOut ?? false }));
   } catch {
     return defaultMenu;
   }
